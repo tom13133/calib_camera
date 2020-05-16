@@ -1,0 +1,7 @@
+initial_guess_camera_TO_lidar:
+  translation: [0, 0, 0]
+  rotation: [20,0,-90]
+intrinsic_parameters:
+  matrix: [698.936, 0.0, 641.868, 0.0, 698.936, 385.788, 0.0, 0.0, 1.0]
+distortion_parameters:
+  k: [-0.171466, 0.0246144]

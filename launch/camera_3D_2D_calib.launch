@@ -1,0 +1,18 @@
+<!-- Filename: camera_3D_2D_calib.launch -->
+<!-- Fileinfo: launch camera_3D_2D_calib -->
+
+<launch>
+
+    <arg name="node_name" default="camera_3D_2D_calib_node"/>
+    <arg name="pkg_name" value="calib_camera"/>
+    <arg name="local" default="true"/>
+
+    <node name="$(arg node_name)" pkg="$(arg pkg_name)" type="$(arg node_name)" output="screen" required="true">
+        <rosparam  command="load" file="$(find calib_camera)/config/default.yaml"/>
+    </node>
+
+
+
+
+
+</launch>
