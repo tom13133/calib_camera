@@ -1,4 +1,4 @@
-initial_guess_camera_TO_lidar:
+initial_guess_camera_TO_3D_sensor:
   translation: [0, 0, 0]
   rotation: [20,0,-90]
 intrinsic_parameters:

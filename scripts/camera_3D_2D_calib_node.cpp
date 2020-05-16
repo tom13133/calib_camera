@@ -61,8 +61,8 @@ int main(int argc, char **argv) {
   // Given a initial guess
   std::vector<float> translation;
   std::vector<float> rotation;
-  nh.getParam("/camera_3D_2D_calib_node/initial_guess_camera_TO_lidar/translation", translation);
-  nh.getParam("/camera_3D_2D_calib_node/initial_guess_camera_TO_lidar/rotation", rotation);
+  nh.getParam("/camera_3D_2D_calib_node/initial_guess_camera_TO_3D_sensor/translation", translation);
+  nh.getParam("/camera_3D_2D_calib_node/initial_guess_camera_TO_3D_sensor/rotation", rotation);
 
   Point p_radar = Point(translation[0], translation[1], translation[2]);
   auto r = AngleAxis(DegToRad(rotation[0]), Vector3::UnitZ())
@@ -82,7 +82,7 @@ int main(int argc, char **argv) {
 
   std::vector<float> k;
   nh.getParam("/camera_3D_2D_calib_node/distortion_parameters/k", k);
-  // Compute extrinc parameters between camera and lidar
+  // Compute extrinc parameters between camera and 3D sensor
   auto final_pose = Find_3D_2D_camera_Transform(points_camera,
                                                 points_3D,
                                                 initial_guess,
@@ -92,10 +92,14 @@ int main(int argc, char **argv) {
   for (int i = 0; i < std::min(10, size); i++) {
     Point p_test = points_3D[i].point_;
     Vector2 v_test = points_camera[i].getUV();
-    p_test = intrinsic_matrix * (final_pose.inverse() * p_test);
-    p_test[0] = p_test[0] / p_test[2];
-    p_test[1] = p_test[1] / p_test[2];
-    std::cout << "Projection = (" << p_test[0] << ", " << p_test[1] << ")"
+    Point p_before = intrinsic_matrix * (initial_guess.inverse() * p_test);
+    Point p_after = intrinsic_matrix * (final_pose.inverse() * p_test);
+    p_before[0] = p_before[0] / p_before[2];
+    p_before[1] = p_before[1] / p_before[2];
+    p_after[0] = p_after[0] / p_after[2];
+    p_after[1] = p_after[1] / p_after[2];
+    std::cout << "Before = (" << p_before[0] << ", " << p_before[1] << ")"
+              << ", After = (" << p_after[0] << ", " << p_after[1] << ")"
               << ", Target = (" << v_test[0] << ", " << v_test[1] << ")" << std::endl;
   }
 
